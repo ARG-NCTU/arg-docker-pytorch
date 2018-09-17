@@ -1,3 +1,6 @@
 [submodule "pytorch-examples"]
 	path = pytorch-examples
 	url = https://github.com/AndersonJo/pytorch-examples.git
+[submodule "PyTorch-Tutorial"]
+	path = PyTorch-Tutorial
+	url = https://github.com/MorvanZhou/PyTorch-Tutorial
