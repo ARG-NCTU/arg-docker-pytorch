@@ -15,4 +15,8 @@ WORKDIR /workspace
  
 RUN conda install scikit-image jupyter numpy matplotlib pyyaml scipy ipython mkl mkl-include && conda clean -ya
 
+WORKDIR $CAFFE_ROOT
+RUN cd build && \
+    make pycaffe -j"$(nproc)" 
+
 EXPOSE 8888
