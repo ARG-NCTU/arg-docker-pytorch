@@ -6,5 +6,6 @@ RUN apt-get update -y && apt-get install -y --no-install-recommends \
     rm -rf /var/lib/apt/lists/*
  
 RUN conda install jupyter numpy matplotlib pyyaml scipy ipython mkl mkl-include && conda clean -ya
-
+RUN conda install -c menpo opencv && conda clean -ya
+RUN conda install -c anaconda pillow && conda clean -ya
 RUN conda install scikit-image && conda clean -ya
