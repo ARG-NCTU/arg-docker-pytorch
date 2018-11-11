@@ -1,4 +1,6 @@
 # This image build for cuda8.0 + cudnn7 + ros kinetic
+# docker pull built image: peterx7803/ros-caffe-ssd
+
 FROM nvidia/cuda:8.0-cudnn7-devel-ubuntu16.04
 
 # Set default shell to bash
@@ -19,10 +21,12 @@ RUN wget -q https://bootstrap.pypa.io/get-pip.py && \
     export PATH=/usr/local/bin:$PATH && \
     rm get-pip.py
 
-RUN pip install pyopenssl
-    
+RUN pip install --upgrade pip
+
 # RUN git clone https://github.com/voutcn/g2o.git && cd g2o && sh init.sh
-RUN pip install -q -U bitarray pyzmq ujson requests gunicorn pymysql numpy pandas scipy scikit-learn gTTs awscli numba chardet > /dev/null
+
+# ADD pip install pyopenssl before ROS install to fix build issue
+RUN pip install -q -U bitarray pyzmq ujson requests gunicorn pymysql numpy pandas scipy scikit-learn gTTs awscli numba chardet pyopenssl > /dev/null
 RUN sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list' && \
     apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-key 421C365BD9FF1F717815A3895523BAEEB01FA116 && \
     apt-get update -qq && \
@@ -65,11 +69,9 @@ ENV CAFFE_ROOT=/opt/caffe
 WORKDIR $CAFFE_ROOT
 # FIXME: use ARG instead of ENV once DockerHub supports this
 # https://github.com/docker/hub-feedback/issues/460
-ENV CLONE_TAG=1.0
 
-#RUN git clone -b ${CLONE_TAG} --depth 1 https://github.com/BVLC/caffe.git . && \
-RUN git clone -b ssd --depth 1 https://github.com/weiliu89/caffe.git . && \
-    git checkout ssd && \
+ENV CLONE_TAG=ssd
+RUN git clone -b ${CLONE_TAG} --depth 1 https://github.com/weiliu89/caffe . && \
     pip install --upgrade pip && \
     cd python && for req in $(cat requirements.txt) pydot; do pip install $req; done && cd .. && \
     git clone https://github.com/NVIDIA/nccl.git && cd nccl && make -j install && cd .. && rm -rf nccl && \
@@ -83,20 +85,4 @@ RUN echo "$CAFFE_ROOT/build/lib" >> /etc/ld.so.conf.d/caffe.conf && ldconfig
 WORKDIR /workspace
 RUN sudo pip install jupyter
 #  -------------------------------------------------- caffe --------------------------------------------------
-
-# -------------------------------------------------- Tensorlow -----------------------------------------------
-#RUN mkdir -p /tensorflow/models
-#RUN apt-get install -y git python-pip
-#RUN pip install tensorflow
-#RUN pip install lxml
-#RUN apt-get install -y protobuf-compiler python-pil #python-lxml
-#RUN pip install jupyter
-#RUN pip install matplotlib
-
-# -------------------------------------------------- Tensorflow --------------------------------------------------
-
-# Define default command.
-# COPY ./ros_entrypoint.sh /
-# ENTRYPOINT ["/ros_entrypoint.sh"]
-# CMD [/bin/bash -c "source /opt/ros/kinetic/setup.bash"]
 
