@@ -18,6 +18,8 @@ RUN wget -q https://bootstrap.pypa.io/get-pip.py && \
     python get-pip.py && \
     export PATH=/usr/local/bin:$PATH && \
     rm get-pip.py
+
+RUN pip install pyopenssl
     
 # RUN git clone https://github.com/voutcn/g2o.git && cd g2o && sh init.sh
 RUN pip install -q -U bitarray pyzmq ujson requests gunicorn pymysql numpy pandas scipy scikit-learn gTTs awscli numba chardet > /dev/null
@@ -64,7 +66,10 @@ WORKDIR $CAFFE_ROOT
 # FIXME: use ARG instead of ENV once DockerHub supports this
 # https://github.com/docker/hub-feedback/issues/460
 ENV CLONE_TAG=1.0
-RUN git clone -b ${CLONE_TAG} --depth 1 https://github.com/BVLC/caffe.git . && \
+
+#RUN git clone -b ${CLONE_TAG} --depth 1 https://github.com/BVLC/caffe.git . && \
+RUN git clone -b ssd --depth 1 https://github.com/weiliu89/caffe.git . && \
+    git checkout ssd && \
     pip install --upgrade pip && \
     cd python && for req in $(cat requirements.txt) pydot; do pip install $req; done && cd .. && \
     git clone https://github.com/NVIDIA/nccl.git && cd nccl && make -j install && cd .. && rm -rf nccl && \
