@@ -25,8 +25,8 @@ Open a browser and type docker_ip:port_num, ex: http://172.17.0.1:8080/
 ```
 
 ## Test the moos-ivp 
+Open a terminal in VNC desktop</br>
 1. Test simple mission
-Open a Terminal
 ```
 container# cd /root/moos-ivp/ivp/missions/s1_alpha
 container# ./launch.sh
