@@ -26,10 +26,12 @@ RUN wget -q https://bootstrap.pypa.io/get-pip.py && \
     python get-pip.py && \
     export PATH=/usr/local/bin:$PATH && \
     rm get-pip.py
+
+RUN pip install --upgrade pip
     
 # RUN git clone https://github.com/voutcn/g2o.git && cd g2o && sh init.sh
 
-RUN pip install -q -U bitarray pyzmq ujson requests gunicorn pymysql numpy pandas scipy scikit-learn gTTs awscli numba chardet > /dev/null
+RUN pip install -q -U bitarray pyzmq ujson requests gunicorn pymysql numpy pandas scipy scikit-learn gTTs awscli numba chardet pyopenssl > /dev/null
 
 RUN sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list' && \
     apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-key 421C365BD9FF1F717815A3895523BAEEB01FA116 && \
