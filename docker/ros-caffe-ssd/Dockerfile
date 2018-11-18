@@ -84,5 +84,9 @@ ENV PATH $CAFFE_ROOT/build/tools:$PYCAFFE_ROOT:$PATH
 RUN echo "$CAFFE_ROOT/build/lib" >> /etc/ld.so.conf.d/caffe.conf && ldconfig
 WORKDIR /workspace
 RUN sudo pip install jupyter gdown
+
+# Download Pre-Trained Model
+RUN cd $CAFFE_ROOT && gdown --id 0BzKzrI_SkD1_WVVTSmQxU0dVRzA && tar -xvf models_VGGNet_VOC0712_SSD_300x300.tar.gz && mv models/VGGNet/VOC0712/SSD_300x300/VGG_VOC0712_SSD_300x300_iter_120000.caffemodel models/VGGNet/VOC0712/SSD_300x300/VGG_VOC0712_SSD_300x300_iter_60000.caffemodel  
+
 #  -------------------------------------------------- caffe --------------------------------------------------
 
